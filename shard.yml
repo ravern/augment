@@ -1,0 +1,13 @@
+name: augment
+version: 0.1.0
+
+authors:
+  - Ravern Koh <ravernkoh@gmail.com>
+
+targets:
+  augment:
+    main: src/augment.cr
+
+crystal: 0.25.1
+
+license: MIT
