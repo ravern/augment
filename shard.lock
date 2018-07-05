@@ -1,0 +1,6 @@
+version: 1.0
+shards:
+  cake:
+    git: https://github.com/cakefile/cake.git
+    commit: 021d8577cbbc9d11c81890dce4d1f0473359ec18
+

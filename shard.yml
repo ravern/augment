@@ -6,8 +6,13 @@ authors:
 
 targets:
   augment:
-    main: src/augment.cr
+    main: src/augment/cli.cr
 
 crystal: 0.25.1
 
 license: MIT
+
+development_dependencies:
+  cake:
+    git: https://github.com/cakefile/cake.git
+    branch: master
