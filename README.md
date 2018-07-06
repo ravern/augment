@@ -52,8 +52,6 @@ The configuration file is where you define all your augments. It is located
 at `~/.augment/config`. The following shows a sample configuration.
 
 ```crystal
-require "augment"
-
 # Adds a "-u" flag to the `go get` command if it isn't present.
 command "go" do
   command "get" do
