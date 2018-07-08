@@ -1,7 +1,15 @@
 class Augment::Command
-  def initialize(@name : String, @parser : Parser, &@block : ->)
-    @args = Arguments.new(@parser)
-    @flags = Flags.new(@parser)
+  getter args
+  getter flags
+
+  def initialize(@args : Array(String) = ARGV, @input : IO = STDIN, @output : IO = STDOUT, @error : IO = STDERR, &@block : ->)
+    @parser = Parser.new(@args)
+  end
+
+  def run
+  end
+
+  def command(name : String)
   end
 end
 

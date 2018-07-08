@@ -1,18 +1,17 @@
 require "cake"
+require "./src/augment/exception"
+require "./src/augment/builder"
 
-BIN = "augment"
+default :development
 
-default :run
-
-phony :run
-target :run, deps: [:build], desc: "Build and run augment" do |env|
-  run "bin/#{BIN}", env.args
-  File.delete("bin/#{BIN}.dwarf")
+phony :development
+target :development, desc: "Builds the binary and scripts in development mode" do |env|
+  Augment::Builder.new.build(development: true)
 end
 
-phony :build
-target :build, desc: "Build augment" do |env|
-  run "shards", ["build"]
+phony :production
+target :production, desc: "Builds the binary and scripts in production mode" do |env|
+  Augment::Builder.new.build
 end
 
 Cake.run

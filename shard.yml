@@ -6,7 +6,7 @@ authors:
 
 targets:
   augment:
-    main: src/augment/cli.cr
+    main: src/augment.cr
 
 crystal: 0.25.1
 
