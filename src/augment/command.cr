@@ -9,7 +9,7 @@ class Augment::Command
   end
 
   def run
-    command = @args.shift
+    command = @args.first
 
     with self yield
 
@@ -34,6 +34,18 @@ class Augment::Command
   end
 
   def command(name : String)
+    if @args.size == 1
+      return
+    end
+
+    command = @args[1]
+
+    if name == command
+      command = Command.new(@args.last(@args.size - 1), @input, @output, @error)
+      command.run do
+        with command yield
+      end
+    end
   end
 end
 

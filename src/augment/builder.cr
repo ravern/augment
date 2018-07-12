@@ -74,7 +74,14 @@ end
     unless development
       args << "--production"
     end
-    status = Process.run("shards", args, input: @input, output: @output, error: @error, chdir: dir)
+
+    if development
+      output = @output
+    else
+      output = Process::Redirect::Close
+    end
+
+    status = Process.run("shards", args, input: @input, output: output, error: @error, chdir: dir)
     unless status.normal_exit? && status.exit_code == 0
       raise BuildError.new("Failed to build binary")
     end
@@ -100,7 +107,7 @@ end
   private def generate_scripts(dir : String)
     commands = IO::Memory.new
 
-    status = Process.run("augment", ["list"], output: commands, error: @error, chdir: dir)
+    status = Process.run("augment", ["list"], input: @input, output: commands, error: @error, chdir: dir)
     unless status.normal_exit? && status.exit_code == 0
       raise BuildError.new("Failed to list commands")
     end

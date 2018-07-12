@@ -3,13 +3,13 @@ class Augment::RootCommand < Augment::Command
   @list : Array(String)?
 
   def run
-    if @args.empty?
-      @args = ["help"]
+    @args.insert(0, "augment")
+
+    if @args.size == 1
+      @args << "help"
     end
 
-    command = @args.first
-
-    case command
+    case @args[1]
     when "help"
       help
       return
@@ -31,7 +31,9 @@ class Augment::RootCommand < Augment::Command
     if list = @list
       list << name
     else
-      super
+      super do
+        with self yield
+      end
     end
   end
 
