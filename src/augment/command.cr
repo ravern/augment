@@ -1,22 +1,31 @@
 class Augment::Command
+  # Whether to call the corresponding command after running the block.
   @proxy = true
 
-  getter args
   getter flags
+  getter args
 
-  def initialize(@args : Array(String) = ARGV, @input : IO = STDIN, @output : IO = STDOUT, @error : IO = STDERR)
-    @parser = Parser.new(@args)
+  def initialize(@command : String, args : Array(String), @input : IO = STDIN, @output : IO = STDOUT, @error : IO = STDERR)
+    @parser = Parser.new(args)
+    @flags = Flags.new(@parser)
+    @args = Arguments.new(@parser)
   end
 
+  # Runs the command.
   def run
-    command = @args.first
-
     with self yield
 
     if @proxy
-      command = resolve(command)
-      if command
-        Process.exec(command, args: @args, input: @input, output: @output, error: @error)
+      Process.exit(0)
+    end
+  end
+
+  # Creates a new child command and runs it if it matches.
+  def command(name : String)
+    if args = @parser.subcommand(name)
+      command = Command.new(@command, args, @input, @output, @error)
+      command.run do
+        with command yield
       end
     end
   end
@@ -25,25 +34,10 @@ class Augment::Command
   # `~/.augment/bin`.
   private def resolve(command : String) : String?
     dir = "#{ENV["HOME"]}/.augment"
+
     ENV["PATH"].split(':').each do |path|
-      path = "#{path}/#{command}"
-      if !path.starts_with?("#{dir}/bin") && File.executable?(path)
+      if !path.starts_with?("#{dir}/bin") && File.executable?("#{path}/#{command}")
         return path
-      end
-    end
-  end
-
-  def command(name : String)
-    if @args.size == 1
-      return
-    end
-
-    command = @args[1]
-
-    if name == command
-      command = Command.new(@args.last(@args.size - 1), @input, @output, @error)
-      command.run do
-        with command yield
       end
     end
   end

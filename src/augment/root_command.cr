@@ -1,23 +1,25 @@
 class Augment::RootCommand < Augment::Command
-  # Stores the list of command names for use in `list` command.
+  # Stores the list of commands to be printed by the `list` command.
   @list : Array(String)?
 
-  def run
-    @args.insert(0, "augment")
-
-    if @args.size == 1
-      @args << "help"
+  def initialize(args : Array(String) = ARGV, input : IO = STDIN, output : IO = STDOUT, error : IO = STDERR)
+    args.insert(0, "augment")
+    if args.size == 1
+      args << "help"
     end
 
-    case @args[1]
-    when "help"
+    super("", args, input, output, error)
+  end
+
+  def run
+    if @parser.subcommand("help")
       help
       return
-    when "build"
-      Builder.new.build
-      return
-    when "list"
+    end
+
+    if @parser.subcommand("list")
       @list = [] of String
+      @proxy = false
     end
 
     super do
