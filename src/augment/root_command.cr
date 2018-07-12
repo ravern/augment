@@ -3,12 +3,10 @@ class Augment::RootCommand < Augment::Command
   @list : Array(String)?
 
   def initialize(args : Array(String) = ARGV, input : IO = STDIN, output : IO = STDOUT, error : IO = STDERR)
-    args.insert(0, "augment")
     if args.size == 1
       args << "help"
     end
-
-    super("", args, input, output, error)
+    super("", 0, args, input, output, error)
   end
 
   def run
@@ -33,8 +31,16 @@ class Augment::RootCommand < Augment::Command
     if list = @list
       list << name
     else
-      super do
-        with self yield
+      path = resolve(name)
+      if path
+        if @parser.subcommand(name)
+          command = Command.new("#{path}/#{name}", 1, @args, @input, @output, @error)
+          command.run do
+            with command yield
+          end
+        end
+      else
+        raise CommandNotFoundError.new(name)
       end
     end
   end
@@ -55,5 +61,15 @@ Commands:
     build    Rebuild the `augment` binary
     list     List the augmented commands
     help     Print usage and descriptions"
+  end
+
+  # Resolves the path of a command, excluding paths that start with
+  # `~/.augment/bin`.
+  private def resolve(command : String) : String?
+    ENV["PATH"].split(':').each do |path|
+      if !path.starts_with?("#{DIR}/bin") && File.executable?("#{path}/#{command}")
+        return path
+      end
+    end
   end
 end

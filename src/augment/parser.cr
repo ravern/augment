@@ -14,13 +14,10 @@ class Augment::Parser
     @command = @args.first
   end
 
-  # Returns the arguments if a subcommand with the given name exists.
+  # Returns whether a subcommand with the given name exists.
   #
-  # For example, in `augment build -v`, the child command would be `build`, and
-  # the arguments returned would be `-v`.
+  # For example, in `augment build -v`, the child command would be `build`.
   def subcommand(name : String)
-    if @args.size > 1 && @args[1] == name
-      return @args.last(@args.size - 1)
-    end
+    return @args.size > 1 && @args[1] == name
   end
 end
