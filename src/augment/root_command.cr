@@ -4,12 +4,15 @@ class Augment::RootCommand < Augment::Command
 
   def run
     if @args.empty?
-      @args = ["build"]
+      @args = ["help"]
     end
 
     command = @args.first
 
     case command
+    when "help"
+      help
+      return
     when "build"
       Builder.new.build
       return
@@ -21,11 +24,7 @@ class Augment::RootCommand < Augment::Command
       with self yield
     end
 
-    if list = @list
-      list.each do |name|
-        @output.puts name
-      end
-    end
+    list
   end
 
   def command(name : String)
@@ -34,5 +33,23 @@ class Augment::RootCommand < Augment::Command
     else
       super
     end
+  end
+
+  private def list
+    if list = @list
+      list.each do |name|
+        @output.puts name
+      end
+    end
+  end
+
+  private def help
+    @output.puts "Usage:
+    augment [command]
+
+Commands:
+    build    Rebuild the `augment` binary
+    list     List the augmented commands
+    help     Print usage and descriptions"
   end
 end
