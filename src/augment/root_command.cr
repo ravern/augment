@@ -15,6 +15,11 @@ class Augment::RootCommand < Augment::Command
       return
     end
 
+    if @parser.subcommand("build")
+      Builder.new.build
+      return
+    end
+
     if @parser.subcommand("list")
       @list = [] of String
       @proxy = false
