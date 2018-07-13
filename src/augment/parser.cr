@@ -17,7 +17,7 @@ class Augment::Parser
   # Returns whether a subcommand with the given name exists.
   #
   # For example, in `augment build -v`, the child command would be `build`.
-  def subcommand(name : String)
+  def subcommand(name : String) : Bool
     return @args.size > 1 && @args[1] == name
   end
 end

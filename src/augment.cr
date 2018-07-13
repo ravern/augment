@@ -1,3 +1,6 @@
+module Augment
+end
+
 require "./augment/exception"
 require "./augment/builder"
 require "./augment/parser"

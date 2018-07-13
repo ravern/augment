@@ -16,7 +16,7 @@ class Augment::RootCommand < Augment::Command
     end
 
     if @parser.subcommand("build")
-      Builder.new.build
+      Builder.new(@input, @output, @error).build
       return
     end
 
