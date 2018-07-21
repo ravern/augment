@@ -9,6 +9,7 @@ class Augment::Builder
   # Builds the `augment` binary and the scripts for each command.
   #
   # `build` will attempt to perform the following tasks:
+  #
   # 1. Delete the existing `bin` directory
   # 2. Generate the `run.cr` file
   # 3. Build the `augment` binary

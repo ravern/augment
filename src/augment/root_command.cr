@@ -38,6 +38,7 @@ class Augment::RootCommand < Augment::Command
     else
       path = resolve(name)
       if path
+        # Code is repeated from `Command` due to the way blocks work
         if @parser.subcommand(name)
           command = Command.new("#{path}/#{name}", 1, @args, @input, @output, @error)
           command.run do

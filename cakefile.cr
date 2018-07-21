@@ -14,4 +14,8 @@ target :production, desc: "Builds the binary and scripts in production mode" do 
   Augment::Builder.new.build
 end
 
+target :boom do |env|
+  puts Regex.new("^--flag(?:=(?<value>.+))?$").match("---flag")
+end
+
 Cake.run
