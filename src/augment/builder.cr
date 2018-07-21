@@ -127,7 +127,7 @@ end
 
         content = "#! /bin/sh
 
-exec augment #{command} \"$@\"
+exec augment with #{command} \"$@\"
 "
 
         File.write("#{DIR}/bin/#{command}", content)
