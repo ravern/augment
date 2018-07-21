@@ -45,21 +45,19 @@ class Augment::RootCommand < Augment::Command
   def command(name : String)
     if list = @list
       list << name
-    else
-      path = resolve(name)
-      if path
-        # Code is repeated from `Command` due to the way blocks work
-        if @parser.has_subcommand?(name)
-          command = Command.new("#{path}/#{name}", 1, @args, @input, @output, @error)
-          command.run do
-            if @augment
-              with command yield
-            end
-          end
+      return
+    end
+
+    path = resolve(name)
+    if path && @parser.has_subcommand?(name)
+      command = Command.new("#{path}/#{name}", 1, @args, @input, @output, @error)
+      command.run do
+        if @augment
+          with command yield
         end
-      else
-        raise CommandNotFoundError.new(name)
       end
+    else
+      raise CommandNotFoundError.new(name)
     end
   end
 
