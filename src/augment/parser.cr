@@ -16,30 +16,21 @@ class Augment::Parser
 
   # Returns whether a subcommand with the given name exists.
   #
-  # For example, in `augment build -v`, the child command would be `build`.
-  def subcommand(name : String) : Bool
+  # For example, in `augment build -v`, the subcommand would be `build`.
+  def has_subcommand?(name : String) : Bool
     return @args.size > 1 && @args[1] == name
   end
 
   # Returns the value of the flag with the given name.
-  #
-  # The following forms are supported:
-  #
-  # * `--flag value`
-  # * `--flag=value`
-  # * `--flag="value"`
-  # * `-f value`
-  # * `-abcf value`
-  #
-  # If the flag is not found, or if the flag does not contain a value, then
-  # `nil` is returned. For flags without values, see `get_bool_flag`.
-  def get_flag(name : String, short_name : Char? = nil) : String?
+  def get_flag(name : String, short_name : Char?) : String?
     name_regex = Regex.new("^--#{name}(?:=(?<value>.+))?$")
-    short_name_regex = Regex.new("^-[a-zA-Z]*#{short_name}$")
+    if short_name
+      short_name_regex = Regex.new("^-[a-zA-Z]*#{short_name}$")
+    end
 
     @args.each_with_index do |arg, i|
       data = name_regex.match(arg)
-      unless data
+      if !data && short_name_regex
         data = short_name_regex.match(arg)
       end
       unless data

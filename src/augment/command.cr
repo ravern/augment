@@ -24,7 +24,7 @@ class Augment::Command
 
   # Creates and runs a subcommand if its name matches.
   def command(name : String)
-    if @parser.subcommand(name)
+    if @parser.has_subcommand?(name)
       command = Command.new(@command, @depth + 1, @args, @input, @output, @error)
       command.run do
         with command yield

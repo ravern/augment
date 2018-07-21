@@ -10,17 +10,17 @@ class Augment::RootCommand < Augment::Command
   end
 
   def run
-    if @parser.subcommand("help")
+    if @parser.has_subcommand?("help")
       help
       return
     end
 
-    if @parser.subcommand("build")
+    if @parser.has_subcommand?("build")
       Builder.new(@input, @output, @error).build
       return
     end
 
-    if @parser.subcommand("list")
+    if @parser.has_subcommand?("list")
       @list = [] of String
       @proxy = false
     end
@@ -39,7 +39,7 @@ class Augment::RootCommand < Augment::Command
       path = resolve(name)
       if path
         # Code is repeated from `Command` due to the way blocks work
-        if @parser.subcommand(name)
+        if @parser.has_subcommand?(name)
           command = Command.new("#{path}/#{name}", 1, @args, @input, @output, @error)
           command.run do
             with command yield
