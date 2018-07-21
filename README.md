@@ -96,10 +96,18 @@ go
 git
 ```
 
-Commands can also be tested out without the proxy. This is sometimes useful
-to diagnose issues such as when an augment isn't being applied.
+Commands can also be tested out without the proxy (i.e. using the `augment`
+command itself). This is sometimes useful to diagnose issues such as when an
+augment isn't being applied.
 
 ```bash
-$ augment git clone github.com/ravernkoh/kubo.git
+$ augment with git clone github.com/ravernkoh/kubo.git
+Cloning into 'kubo'...
+```
+
+Commands can also be run without augments.
+
+```bash
+$ augment without git clone https://github.com/ravernkoh/kubo.git
 Cloning into 'kubo'...
 ```
