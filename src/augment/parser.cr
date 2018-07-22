@@ -2,6 +2,9 @@ class Augment::Parser
   # Returns the name of the command.
   getter command : String
 
+  # Returns the arguments of the command.
+  getter args : Array(String)
+
   # Parses the given arguments.
   #
   # The first argument should be the name of the command. Therefore, the given
@@ -23,6 +26,26 @@ class Augment::Parser
 
   # Returns the value of the flag with the given name.
   def get_flag(name : String, short_name : Char?) : String?
+    if index = find_flag(name, short_name)
+      return @args[index[0]]
+    end
+    return nil
+  end
+
+  # Sets the value of the flag with the given name.
+  def set_flag(name : String, short_name : Char?, value : String)
+    if index = find_flag(name, short_name)
+      if index[1]
+        @args[index[0]] = "--#{name}=#{value}"
+      else
+        @args[index[0]] = value
+      end
+    end
+  end
+
+  # Returns the index of the flag with the given name and a bool indicating
+  # whether the flag is in the form `--flag=value`.
+  private def find_flag(name : String, short_name : Char?) : Tuple(Int32, Bool)?
     name_regex = Regex.new("^--#{name}(?:=(?<value>.+))?$")
     if short_name
       short_name_regex = Regex.new("^-[a-zA-Z]*#{short_name}$")
@@ -37,12 +60,12 @@ class Augment::Parser
         next
       end
 
-      if value = data["value"]?
-        return value
+      if data["value"]?
+        return {i, true}
       end
 
       if i + 1 < @args.size
-        return @args[i + 1]
+        return {i + 1, false}
       end
     end
 
